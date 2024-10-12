@@ -22,17 +22,27 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 C:\Users\47302\Desktop\F722\STM32F7\MDK-ARM\STM32F7.uvprojx
-Project File Date:  10/05/2024
+Project File Date:  10/12/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'STM32F7'
-compiling spi.c...
-compiling screen.c...
+compiling main.c...
+../Core/Inc/User_usb.h(19): warning:  #1295-D: Deprecated declaration GetLcdBufferPtr - give arg types
+  uint8_t* GetLcdBufferPtr();
+../Core/Inc/User_usb.h(21): warning:  #1295-D: Deprecated declaration SwitchPingPongBuffer - give arg types
+  void SwitchPingPongBuffer();
+../Core/Inc/User_usb.h(22): warning:  #1295-D: Deprecated declaration GetPingPongBufferPtr - give arg types
+  uint8_t* GetPingPongBufferPtr();
+../Core/Inc/User_usb.h(23): warning:  #1295-D: Deprecated declaration GetExtraDataRxPtr - give arg types
+  uint8_t* GetExtraDataRxPtr();
+../Core/Src/main.c(117): warning:  #188-D: enumerated type mixed with another type
+  	screen_init(2);
+../Core/Src/main.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=16462 RO-data=346226 RW-data=136 ZI-data=18696  
+Program Size: Code=29604 RO-data=624 RW-data=444 ZI-data=109052  
 FromELF: creating hex file...
-"STM32F7\STM32F7.axf" - 0 Error(s), 0 Warning(s).
+"STM32F7\STM32F7.axf" - 0 Error(s), 5 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -56,7 +66,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:05
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

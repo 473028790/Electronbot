@@ -24,13 +24,16 @@
 #include "i2c.h"
 #include "spi.h"
 #include "usart.h"
-#include "usb_otg.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "screen.h"
 #include "image.h"
+#include "configurations.h"
+#include "User_usb.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,6 +50,8 @@
 /* USER CODE BEGIN PM */
 extern uint8_t gImage_1[4][43200];
 extern uint8_t gImage_2[4][43200];
+extern USBD_HandleTypeDef hUsbDeviceHS;
+extern USBD_CDC_HandleTypeDef *hcdc;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -105,12 +110,13 @@ int main(void)
   MX_I2C1_Init();
   MX_UART4_Init();
   MX_USART1_UART_Init();
-  MX_USB_OTG_HS_USB_Init();
   MX_SPI1_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
+	CAN1_Filterinit_And_Start();
 	screen_init(2);
 	Screen_SetWindow(0, 239, 0, 239);
+	//USBD_LL_PrepareReceive(&hUsbDeviceHS, CDC_OUT_EP, hcdc->RxBuffer, CDC_DATA_HS_OUT_PACKET_SIZE);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

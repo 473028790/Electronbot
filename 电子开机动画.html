@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IronLAnimation</title>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    html, body { height: 100% }
+    body {
+      background: black;
+    }
+
+    /* 定义 CSS 变量用于调整 N 和带横线 O 的距离 */
+    :root {
+      --n-o-distance: 30px;  /* N 和 O 之间的初始距离，可以调整 */
+    }
+
+    /* 外部包裹容器，控制整体的位置和移动 */
+    .outWrap{
+      position: fixed;
+      top: 30%; /* 顶部距离 */
+      left: 3%;  /* 初始位置更靠左，Iron 往左移 */
+      display: flex;
+      animation: moveFiexd 4s forwards; /* 左到右的动画 */
+    }
+
+    /* Iron 文本的样式 */
+    .font{
+      height: 150px;   /* 文本高度 */
+      color: white;    /* 字体颜色为白色 */
+      font-size: 104px; /* 字体大小 */
+      line-height: 190px; /* 行高 */
+      letter-spacing: 8px; /* 调整字母间距，增加到15px */
+      opacity: 0;      /* 初始透明度 */
+      animation: transparency 4s forwards; /* 渐变透明度动画 */
+    }
+
+    /* L 字母的样式 */
+    .back{
+      height: 150px;   /* L 的高度 */
+      color: white;    /* 字体颜色 */
+      font-size: 120px; /* L 的字体大小 */
+      line-height: 190px; /* 行高 */
+      margin-left: 10px; /* 给 L 添加额外的左边距，让其往右移一点 */
+      letter-spacing: 5px; /* 调整 L 的字母间距 */
+      opacity: 0;      /* 初始透明度 */
+      animation: transparency 4s forwards; /* 渐变透明度动画 */
+    }
+
+    /* 包裹 O 的容器 */
+    .wrap{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      margin-left: var(--n-o-distance); /* 使用 CSS 变量调整 N 和 O 的距离 */
+    }
+    
+    /* O 的上半部分的包裹层 */
+    .wrapOver {
+      position: relative;
+      width: 80px;  /* O 的宽度 */
+      height: 40px; /* O 的高度 */
+      overflow: hidden;
+    }
+
+    /* O 的上半部分样式 */
+    .circle1 {
+      position: absolute;
+      box-sizing: border-box;
+      width: 80px;  /* O 的直径变小 */
+      height: 80px; 
+      border: 10px solid white; /* 边框大小变小 */
+      border-radius: 50%; /* 圆形 */
+      transform: translateY(100%); /* 初始位置 */
+      filter:blur(2px); /* 初始模糊效果 */
+      animation: myMoveTop 2s forwards; /* 向上移动的动画 */
+    }
+
+    /* O 的下半部分样式 */
+    .circle2 {
+      position: absolute;
+      box-sizing: border-box;
+      width: 80px;  /* O 的直径变小 */
+      height: 80px; 
+      border: 10px solid white; /* 边框大小变小 */
+      border-radius: 50%; /* 圆形 */
+      transform: translateY(-150%); /* 初始位置 */
+      filter:blur(2px); /* 初始模糊效果 */
+      animation: myMoveBottom 2s forwards; /* 向下移动的动画 */
+    }
+
+    /* 蓝色下划线的样式 */
+    .bottomSliver{
+      width: 0px; /* 初始宽度 */
+      height: 5px; /* 高度 */
+      background:#00a1d6; /* 蓝色 */
+      margin-top: 5px; /* 上边距 */
+      animation: myMoveSliver 4s forwards; /* 宽度增长的动画 */
+    }
+
+    /* 渐变透明度动画 */
+    @keyframes transparency {
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* 蓝色线条增长动画 */
+    @keyframes myMoveSliver {
+      50% { width: 0px; }
+      100% { width: 80px; }  /* 蓝色线条变长至 80px */
+    }
+
+    /* O 的下半部分动画，模糊减少，位置上移 */
+    @keyframes myMoveBottom {
+      90% {filter:blur(2px); }
+      100% { transform: translateY(-50%);filter:blur(0px);}
+    }
+
+    /* O 的上半部分动画，模糊减少，位置恢复 */
+    @keyframes myMoveTop {
+      90% {filter:blur(2px); }
+      100% { transform: none;filter:blur(0px); }
+    }
+
+    /* 整体从左到右的移动动画 */
+    @keyframes moveFiexd {
+      50% {left: 3%; }   /* 左移起点调整为 3% */
+      100% {left: 7%; } /* 左移终点调整为 7%，让整体不移动太靠右 */
+    }
+  </style>
+</head>
+<body>
+  <div class="outWrap">
+    <!-- Iron 字母 -->
+    <div class="font">Iron</div>
+    
+    <!-- 包裹 O 的两个圆圈和蓝色线 -->
+    <div class="wrap">
+      <div class="wrapOver">
+        <div class="circle1"></div>
+      </div>
+      <div class="wrapOver">
+        <div class="circle2"></div>
+      </div>
+      <div class="bottomSliver"></div>
+    </div>
+    
+    <!-- L 字母 -->
+    <div class="back">L</div>
+  </div>
+</body>
+</html>

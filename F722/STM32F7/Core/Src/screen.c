@@ -289,12 +289,14 @@ void Screen_SetDataOrCommand(bool isData)
 void WriteCommand(uint8_t _cmd)
 {
     Screen_SetDataOrCommand(false);
-    HAL_SPI_Transmit_DMA(&hspi2, &_cmd, 1);
+    HAL_SPI_Transmit_DMA(&hspi2, &_cmd, sizeof(_cmd));
+	//HAL_SPI_Transmit(&hspi2, &_cmd, sizeof(_cmd),300);
 }
 void Write1Byte(uint8_t _data)
 {
     Screen_SetDataOrCommand(true);
-    HAL_SPI_Transmit_DMA(&hspi2, &_data, 1);
+    HAL_SPI_Transmit_DMA(&hspi2, &_data, sizeof(_data));
+		//HAL_SPI_Transmit(&hspi2, &_data, sizeof(_data),300);
 }
 void Screen_SetWindow(uint16_t _startX, uint16_t _endX, uint16_t _startY, uint16_t _endY)
 {
@@ -329,21 +331,26 @@ void WriteData(uint8_t* _data, uint32_t _len, bool _useDma)
 //{
 //    electron.lcd->isBusy = false;
 //}
-int cnt1=0;
-int cnt2=0;
+bool Screen_isBusy=0;
 void Screen_WriteFrameBuffer(uint8_t* _buffer, uint32_t _len, bool _isAppend)
 {
+    Screen_isBusy=true;
+
 	if (_isAppend) {
 			WriteCommand(0x3C); // MEM_WR_CONT
 	} else {
-		cnt1++;
+
 			WriteCommand(0x2C); // MEM_WR
 	}
 
 	WriteData(_buffer, _len, 0);
-	cnt2++;
+
 }
 
+void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi)
+{
+    Screen_isBusy = false;
+}
 
 
 const uint8_t gImage_2[4][43200] = {
@@ -11156,9 +11163,6 @@ const uint8_t gImage_2[4][43200] = {
         0x28, 0x88, 0x20, 0x28, 0x80, 0x1C, 0x24, 0x6C, 0x04, 0x10, 0x8C, 0x18, 0x24, 0x94, 0x18, 0x28
     }
 };
-
-
-
 const uint8_t gImage_1[4][43200] = {
   {0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 
     0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 0xFC, 

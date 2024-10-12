@@ -26,7 +26,9 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "screen.h"
+#include "can.h"
 #include "image.h"
+#include "User_usb.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,6 +61,7 @@ osThreadId myTask02Handle;
 void StartDefaultTask(void const * argument);
 void screen_task(void const * argument);
 
+extern void MX_USB_DEVICE_Init(void);
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
@@ -127,6 +130,8 @@ void MX_FREERTOS_Init(void) {
 /* USER CODE END Header_StartDefaultTask */
 void StartDefaultTask(void const * argument)
 {
+  /* init code for USB_DEVICE */
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
   for(;;)
@@ -146,6 +151,10 @@ int cnty=0;
 extern uint8_t gImage_1[4][43200];
 extern uint8_t gImage_2[4][43200];
 int cnt=0;
+int cnt11=0x13,cnt12;
+float cnt026=90;
+extern bool Screen_isBusy;
+int p=0;
 /* USER CODE END Header_screen_task */
 void screen_task(void const * argument)
 {
@@ -153,30 +162,58 @@ void screen_task(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		cnty++;
-		if(cnt==0)
-		{
-			for (int p = 0; p < 4; p++)
-			{
-			if (p == 0)
-					Screen_WriteFrameBuffer(gImage_1[0],43200,0);
-			else
-					Screen_WriteFrameBuffer(gImage_1[p],43200, true);
-			}
-			cnt=2;
-		}
-		else if(cnt==1){
-			for (int p = 0; p < 4; p++)
-			{
-			if (p == 0)
-					Screen_WriteFrameBuffer(gImage_2[0],43200,0);
-			else
-					Screen_WriteFrameBuffer(gImage_2[p],43200, true);
-			}
-			cnt=2;
-		}
-		
+
+//		if(cnt==0)
+//		{
+//			for (int p = 0; p < 4; p++)
+//			{
+//        while (Screen_isBusy);
+//			if (p == 0)
+//					Screen_WriteFrameBuffer(gImage_1[0],43200,0);
+//			else
+//					Screen_WriteFrameBuffer(gImage_1[p],43200, true);
+//			}
+//			cnt=2;
+//		}
+//		else if(cnt==1){
+//			for (int p = 0; p < 4; p++)
+//			{
+//        while (Screen_isBusy);
+//			if (p == 0)
+//					Screen_WriteFrameBuffer(gImage_2[0],43200,0);
+//			else
+//					Screen_WriteFrameBuffer(gImage_2[p],43200, true);
+//			}
+//			HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+//			cnt=2;
+//		}
 		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
+				for (int p = 0; p < 4; p++)
+		{
+//            // send joint angles
+//            for (int j = 0; j < 6; j++)
+//                for (int i = 0; i < 4; i++)
+//                {
+//                    auto* b = (unsigned char*) &(electron.joint[j + 1].angle);
+//                    electron.usbBuffer.extraDataTx[j * 4 + i + 1] = *(b + i);
+//                }
+				//SendUsbPacket(extraDataTx, 32);
+
+				ReceiveUsbPacketUntilSizeIs(224); // last packet is 224bytes
+
+				// get joint angles
+				uint8_t* ptr = GetExtraDataRxPtr();
+
+				while (Screen_isBusy);
+				if (p == 0)
+						Screen_WriteFrameBuffer(GetLcdBufferPtr(),
+																					 60 * 240 * 3,0);
+				else
+						Screen_WriteFrameBuffer(GetLcdBufferPtr(),
+																					 60 * 240 * 3, true);
+		}
+		Can_Send_uint8(1,0x13,cnt12);
+		Can_Send_float(1,0x14,cnt026);
     osDelay(1);
   }
   /* USER CODE END screen_task */
@@ -186,4 +223,14 @@ void screen_task(void const * argument)
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
+
+
+
+
+
+
+
+
+
+
 

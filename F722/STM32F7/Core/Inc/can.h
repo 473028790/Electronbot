@@ -41,7 +41,14 @@ extern CAN_HandleTypeDef hcan1;
 void MX_CAN1_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void CAN1_Filterinit_And_Start(void);
 
+
+void Can_Send_uint8(uint8_t motor_id,uint8_t type,uint8_t data);
+void Can_Send_uint16(uint8_t motor_id,uint8_t type,uint16_t data);
+void Can_Send_float(uint8_t motor_id,uint8_t type,float data);
+
+void usb_sendBytes_Transpeed(uint32_t i);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
