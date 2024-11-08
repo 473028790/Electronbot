@@ -1,0 +1,12 @@
+debug/control.o
+debug/expression.o
+debug/main.o
+debug/mainwindow.o
+debug/tdicethread.o
+debug/vision.o
+debug/qrc_expression_picture.o
+debug/moc_control.o
+debug/moc_expression.o
+debug/moc_mainwindow.o
+debug/moc_tdicethread.o
+debug/moc_vision.o

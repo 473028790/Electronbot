@@ -1,0 +1,12 @@
+release/control.o
+release/expression.o
+release/main.o
+release/mainwindow.o
+release/tdicethread.o
+release/vision.o
+release/qrc_expression_picture.o
+release/moc_control.o
+release/moc_expression.o
+release/moc_mainwindow.o
+release/moc_tdicethread.o
+release/moc_vision.o

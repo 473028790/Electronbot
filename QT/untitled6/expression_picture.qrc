@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/expression">
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/sad.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/right.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/normal.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/left.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/fear.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/excited.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/disdain.png</file>
+        <file>build/Desktop_Qt_6_5_3_MinGW_64_bit-Debug/anger.png</file>
+    </qresource>
+</RCC>
