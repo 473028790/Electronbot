@@ -71,3 +71,4 @@ stm32f7\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_cor
 stm32f7\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h
 stm32f7\freertos.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h
 stm32f7\freertos.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+stm32f7\freertos.o: ../Core/Inc/configurations.h

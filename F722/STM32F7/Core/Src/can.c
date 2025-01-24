@@ -134,15 +134,14 @@ void CAN1_Filterinit_And_Start(void)
 	can1_filter.FilterFIFOAssignment = 0;
 	can1_filter.FilterActivation = ENABLE;
 	can1_filter.SlaveStartFilterBank = 0;
-	HAL_CAN_ConfigFilter(&hcan1,&can1_filter);//閿熸枻鎷峰閿熸枻鎷? CAN1 閿熸枻鎷烽敓鏂ゆ嫹閿熸枻�??
-	HAL_CAN_Start(&hcan1);//閿熸枻鎷烽敓鏂ゆ�? CAN1
-	HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);//閿熸枻鎷烽敓鏂ゆ嫹CAN1 FIFO0 閿熸枻鎷烽敓鏂ゆ�?
+	HAL_CAN_ConfigFilter(&hcan1,&can1_filter);//闁跨喐鏋婚幏宄邦潗闁跨喐鏋婚幏? CAN1 闁跨喐鏋婚幏鐑芥晸閺傘倖瀚归柨鐔告灮閹??
+	HAL_CAN_Start(&hcan1);//闁跨喐鏋婚幏鐑芥晸閺傘倖瀚? CAN1
+	HAL_CAN_ActivateNotification(&hcan1,CAN_IT_RX_FIFO0_MSG_PENDING);//闁跨喐鏋婚幏鐑芥晸閺傘倖瀚笴AN1 FIFO0 闁跨喐鏋婚幏鐑芥晸閺傘倖瀚?
 }
 
 float bytes_to_float(uint8_t *data) 
 {
   float value;
-  // 使用 memcpy 确保不会发生内存对齐问题
   memcpy(&value, data, sizeof(float));
   return value;
 }
@@ -200,10 +199,10 @@ void Can_Send_float(uint8_t motor_id,uint8_t type,float data)
 	static uint8_t Data[8];
   uint8_t* pFloat = (uint8_t*) &data;
 	Data[0]=type;
-  Data[1] = pFloat[0]; // 低字�?
+  Data[1] = pFloat[0]; // 浣庡瓧鑺?
   Data[2] = pFloat[1];
   Data[3] = pFloat[2];
-  Data[4] = pFloat[3]; // 高字�?
+  Data[4] = pFloat[3]; // 楂樺瓧鑺?
 	Data[5]=0;
 	Data[6]=0;
 	Data[7]=0;
@@ -226,7 +225,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 		{
 			case 1:
 			  boardConfig[can_recive_id].actual_angle=bytes_to_float(&Data[0]);
-        boardConfig[can_recive_id].enableMotorOnBoot=Data[4];
+        	  boardConfig[can_recive_id].enableMotorOnBoot=Data[4];
 			break;
 			case 2:
 			  boardConfig[can_recive_id].initPos=bytes_to_float(&Data[0]);

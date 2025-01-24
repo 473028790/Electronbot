@@ -29,6 +29,7 @@
 #include "can.h"
 #include "image.h"
 #include "User_usb.h"
+#include "configurations.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -122,6 +123,9 @@ void MX_FREERTOS_Init(void) {
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
+bool User_Usb_Finish;
+int cnty=0;
+uint8_t isEnabled;
 /**
   * @brief  Function implementing the defaultTask thread.
   * @param  argument: Not used
@@ -136,6 +140,33 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		cnty++;
+    if(User_Usb_Finish==1)
+    {
+      // get joint angles
+      uint8_t* ptr = GetExtraDataRxPtr();
+			memcpy(&boardConfig[0].target_angle, ptr + 1, sizeof(float));
+
+      if (isEnabled != (bool) ptr[0])
+      {
+          isEnabled = ptr[0];
+          Can_Send_uint8(0x01,0x13,isEnabled);
+          Can_Send_uint8(0x06,0x13,isEnabled);
+          Can_Send_uint8(0x03,0x13,isEnabled);
+          Can_Send_uint8(0x04,0x13,isEnabled);
+          Can_Send_uint8(0x05,0x13,isEnabled);
+          Can_Send_uint8(0x02,0x13,isEnabled);
+      }
+			Can_Send_float(1,0x14,boardConfig[0].target_angle);
+      
+//      for (int j = 0; j < 6; j++)
+//      {
+//        boardConfig[j].target_angle=*((float*) (ptr + 4 * j + 1));
+//      }
+      User_Usb_Finish=0;
+    }
+
+
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
@@ -147,18 +178,19 @@ void StartDefaultTask(void const * argument)
 * @param argument: Not used
 * @retval None
 */
-int cnty=0;
 extern uint8_t gImage_1[4][43200];
 extern uint8_t gImage_2[4][43200];
-int cnt=0;
-int cnt11=0x13,cnt12;
-float cnt026=90;
+
 extern bool Screen_isBusy;
-int p=0;
+
+extern BoardConfig_t boardConfig[6];
+extern struct UsbBuffer_t usbBuffer;
+
 /* USER CODE END Header_screen_task */
 void screen_task(void const * argument)
 {
   /* USER CODE BEGIN screen_task */
+  static int p=0;
   /* Infinite loop */
   for(;;)
   {
@@ -188,32 +220,36 @@ void screen_task(void const * argument)
 //			cnt=2;
 //		}
 		HAL_GPIO_WritePin(GPIOA,GPIO_PIN_8,GPIO_PIN_SET);
-				for (int p = 0; p < 4; p++)
+		for (int p = 0; p < 4; p++)
 		{
-//            // send joint angles
-//            for (int j = 0; j < 6; j++)
-//                for (int i = 0; i < 4; i++)
-//                {
-//                    auto* b = (unsigned char*) &(electron.joint[j + 1].angle);
-//                    electron.usbBuffer.extraDataTx[j * 4 + i + 1] = *(b + i);
-//                }
-				//SendUsbPacket(extraDataTx, 32);
+        // send joint angles
+        
+        for (int j = 0; j < 6; j++)
+            for (int i = 0; i < 4; i++)
+            {
+                unsigned char* b = (unsigned char*) &(boardConfig[j].actual_angle);
+                usbBuffer.extraDataTx[j * 4 + i + 1] = *(b + i);
+
+            }
+				SendUsbPacket(usbBuffer.extraDataTx, 32);
 
 				ReceiveUsbPacketUntilSizeIs(224); // last packet is 224bytes
+        User_Usb_Finish=1;
 
-				// get joint angles
-				uint8_t* ptr = GetExtraDataRxPtr();
+        
+        if(Screen_isBusy==0)
+        {
+          if (p == 0)
+              Screen_WriteFrameBuffer(GetLcdBufferPtr(),
+                                            60 * 240 * 3,0);
+          else
+              Screen_WriteFrameBuffer(GetLcdBufferPtr(),
+                                            60 * 240 * 3, true);
+        }
 
-				while (Screen_isBusy);
-				if (p == 0)
-						Screen_WriteFrameBuffer(GetLcdBufferPtr(),
-																					 60 * 240 * 3,0);
-				else
-						Screen_WriteFrameBuffer(GetLcdBufferPtr(),
-																					 60 * 240 * 3, true);
 		}
-		Can_Send_uint8(1,0x13,cnt12);
-		Can_Send_float(1,0x14,cnt026);
+		//Can_Send_uint8(1,0x13,cnt12);
+		//Can_Send_float(1,0x14,cnt026);
     osDelay(1);
   }
   /* USER CODE END screen_task */

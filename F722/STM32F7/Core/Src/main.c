@@ -116,7 +116,8 @@ int main(void)
 	CAN1_Filterinit_And_Start();
 	screen_init(2);
 	Screen_SetWindow(0, 239, 0, 239);
-	//USBD_LL_PrepareReceive(&hUsbDeviceHS, CDC_OUT_EP, hcdc->RxBuffer, CDC_DATA_HS_OUT_PACKET_SIZE);
+
+
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

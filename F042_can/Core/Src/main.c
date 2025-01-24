@@ -173,6 +173,8 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 extern Motor user_motor;
 extern uint16_t Can_Send_Sign;
+
+int cn332=0;
 /* USER CODE END 4 */
 
 /**
@@ -196,7 +198,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Motor_control */
 		static int16_t montor_out_pwm;
 		/* Infinite loop */
-
+		cn332++;
 		HAL_ADC_Start_DMA(&hadc, (uint32_t*)adcData, 1);
 		montor_out_pwm=CalcDceOutput(&user_motor, (float)adcData[0]);
 		SetPwm(&user_motor, montor_out_pwm);
